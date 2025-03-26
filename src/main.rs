@@ -1,3 +1,6 @@
+use bevy::prelude::*;
+use platformer_demo::AppPlugin;
+
 fn main() {
-    println!("Hello, world!");
+    App::new().add_plugins(AppPlugin).run();
 }
