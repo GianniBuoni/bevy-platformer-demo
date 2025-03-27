@@ -3376,14 +3376,14 @@
 			}
 		},
 		{
-			"__cWid": 5,
-			"__cHei": 1,
+			"__cWid": 6,
+			"__cHei": 9,
 			"identifier": "Player",
 			"uid": 214,
-			"relPath": "images/player/idle.png",
+			"relPath": "images/captain-96x96.png",
 			"embedAtlas": null,
-			"pxWid": 480,
-			"pxHei": 96,
+			"pxWid": 576,
+			"pxHei": 864,
 			"tileGridSize": 96,
 			"spacing": 0,
 			"padding": 0,
@@ -3392,7 +3392,10 @@
 			"enumTags": [],
 			"customData": [],
 			"savedSelections": [],
-			"cachedPixelData": { "opaqueTiles": "00000", "averageColors": "18771877187818781877" }
+			"cachedPixelData": {
+				"opaqueTiles": "000000000000000000000000000000000000000000000000000000",
+				"averageColors": "1877187718781878187700001878187818781877187718781877187718770000000000001877000000000000000000001877187800000000000000001fff1877187818770000000018781989187800000000000019781a9a1878000000000000199a18781878000000000000"
+			}
 		}
 	], "enums": [], "externalEnums": [], "levelFields": [] },
 	"levels": [
