@@ -5,6 +5,11 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 #[derive(Component, Default)]
+#[require(
+    Name(|| Name::new("Player")),
+    RigidBody(|| RigidBody::Static),
+    Collider(|| Collider::rectangle(32., 32.)),
+)]
 pub struct Player;
 
 #[derive(LdtkEntity, Default, Bundle)]
