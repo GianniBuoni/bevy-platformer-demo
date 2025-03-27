@@ -16,7 +16,7 @@ fn spawn_camera(mut commands: Commands) {
             },
             ..OrthographicProjection::default_2d()
         },
-        Transform::from_xyz(GAME_W / 2., GAME_H / 2., 0.),
+        Transform::from_xyz(GAME_W / 2., GAME_H / 2. + 24., 0.),
     ));
 }
 
