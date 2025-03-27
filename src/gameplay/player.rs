@@ -3,7 +3,9 @@ use bevy_tnua_avian2d::*;
 
 pub(super) fn plugin(app: &mut App) {
     app.register_ldtk_entity::<PlauerBundle>("Player");
-    app.add_systems(Update, player_controls);
+    app.init_resource::<PlayerInputVector>();
+    app.add_systems(Update, player_input.in_set(UpdateSets::RecordInput));
+    app.add_systems(Update, player_controls.in_set(UpdateSets::Update));
 }
 
 #[derive(Component, Default)]
@@ -24,10 +26,11 @@ pub struct PlauerBundle {
     sprite_sheet: Sprite,
 }
 
-// TODO decouple control and input
-// TODO create player and physics constants with documentation
-fn player_controls(
-    mut controller: Query<&mut TnuaController>,
+#[derive(Resource, Default)]
+struct PlayerInputVector(pub Vec2);
+
+fn player_input(
+    mut input_vector: ResMut<PlayerInputVector>,
     kb_input: Res<ButtonInput<KeyCode>>,
 ) {
     let left: f32 = if kb_input.any_pressed([
@@ -48,22 +51,20 @@ fn player_controls(
     } else {
         0.
     };
-    let input_vector = Vec3::new(right - left, 0., 0.);
 
+    input_vector.0.x = right - left;
+}
+
+fn player_controls(
+    input_vector: Res<PlayerInputVector>,
+    mut controller: Query<&mut TnuaController>,
+) {
     let mut controller = get_single_mut!(controller);
     controller.basis(TnuaBuiltinWalk {
-        desired_velocity: input_vector * 100.,
-        desired_forward: Dir3::new(input_vector).ok(),
+        desired_velocity: input_vector.0.extend(0.) * 100.,
+        desired_forward: Dir3::new(input_vector.0.extend(0.)).ok(),
         float_height: 16.,
         acceleration: 100.,
         ..default()
     });
-
-    if kb_input.just_pressed(KeyCode::Space) {
-        controller.action(TnuaBuiltinJump {
-            height: 72.,
-            takeoff_extra_gravity: 50.,
-            ..default()
-        });
-    }
 }

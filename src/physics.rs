@@ -1,6 +1,11 @@
 use crate::prelude::*;
 use bevy_tnua_avian2d::TnuaAvian2dPlugin;
 
+#[allow(unused_imports)]
+pub(crate) mod prelude {
+    pub(crate) use super::GRAVITY;
+}
+
 pub const GRAVITY: f32 = 100.;
 
 pub(super) fn plugin(app: &mut App) {
