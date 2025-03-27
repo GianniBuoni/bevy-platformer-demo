@@ -1,6 +1,8 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
 
+pub(crate) use crate::UpdateSets;
+pub(crate) use crate::physics::*;
 pub(crate) use avian2d::prelude::*;
 pub(crate) use bevy::prelude::*;
 pub(crate) use bevy_ecs_ldtk::prelude::*;

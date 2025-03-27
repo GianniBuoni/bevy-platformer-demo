@@ -12,6 +12,15 @@ pub struct AppPlugin;
 
 impl Plugin for AppPlugin {
     fn build(&self, app: &mut App) {
+        app.configure_sets(
+            Update,
+            (
+                UpdateSets::TimersTick,
+                UpdateSets::RecordInput,
+                UpdateSets::Update,
+            )
+                .chain(),
+        );
         app.add_plugins(
             DefaultPlugins
                 .set(WindowPlugin {
@@ -33,4 +42,11 @@ impl Plugin for AppPlugin {
         // add module plugins
         app.add_plugins((camera::plugin, gameplay::plugin, physics::plugin));
     }
+}
+
+#[derive(SystemSet, PartialEq, Eq, Clone, Debug, Hash)]
+pub enum UpdateSets {
+    TimersTick,
+    RecordInput,
+    Update,
 }
