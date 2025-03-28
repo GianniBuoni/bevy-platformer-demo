@@ -1,9 +1,5 @@
-use std::time::Duration;
-
-use crate::gameplay::player::{Player, PlayerInput};
 use crate::prelude::*;
-
-use super::player::prelude::*;
+use std::time::Duration;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(
@@ -18,7 +14,7 @@ pub(super) fn plugin(app: &mut App) {
 pub(super) struct AnimateOnce;
 
 #[derive(Component, Default)]
-pub(super) struct AnimationConfig {
+pub struct AnimationConfig {
     pub first_sprite: usize,
     pub sprite_count: usize,
     pub frame_timer: Timer,
@@ -75,19 +71,19 @@ fn animation_state(
                 *config = AnimationConfig::new(18, 1, 8);
             }
         }
+        commands.entity(player).remove::<PlayerStateTransition>();
     }
 }
 
 fn animate(
     time: Res<Time>,
-    input: Res<PlayerInput>,
-    mut query: Query<(&mut AnimationConfig, &mut Sprite)>,
+    mut query: Query<(&mut AnimationConfig, &PlayerInput, &mut Sprite)>,
 ) {
-    for (mut config, mut sprite) in &mut query {
+    for (mut config, input, mut sprite) in &mut query {
         config.frame_timer.tick(time.delta());
 
         if config.frame_timer.just_finished() {
-            match input.movement_vector.x {
+            match input.x {
                 -1. => sprite.flip_x = true,
                 1. => sprite.flip_x = false,
                 _ => (),
@@ -106,7 +102,6 @@ fn animate_once(
         (Entity, &AnimationConfig, &AnimateOnce, &Sprite),
         With<Player>,
     >,
-    mut input: ResMut<PlayerInput>,
     mut commands: Commands,
 ) {
     let (player, config, _, sprite) = get_single!(player);
@@ -116,7 +111,6 @@ fn animate_once(
     };
     // TODO look at this in an inspector
     if atlas.index >= config.first_sprite + config.sprite_count - 1 {
-        input.jump = false;
         commands.entity(player).remove::<AnimateOnce>();
     }
 }

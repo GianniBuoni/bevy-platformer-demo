@@ -6,6 +6,7 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 mod camera;
 mod gameplay;
 mod physics;
+mod player;
 mod prelude;
 
 pub struct AppPlugin;
@@ -17,8 +18,8 @@ impl Plugin for AppPlugin {
             (
                 UpdateSets::TimersTick,
                 UpdateSets::RecordInput,
-                UpdateSets::StateManagement,
                 UpdateSets::Update,
+                UpdateSets::StateManagement,
                 UpdateSets::Draw,
             )
                 .chain(),
@@ -42,7 +43,12 @@ impl Plugin for AppPlugin {
         #[cfg(debug_assertions)]
         app.add_plugins(WorldInspectorPlugin::new());
         // add module plugins
-        app.add_plugins((camera::plugin, gameplay::plugin, physics::plugin));
+        app.add_plugins((
+            camera::plugin,
+            gameplay::plugin,
+            physics::plugin,
+            player::plugin,
+        ));
     }
 }
 
