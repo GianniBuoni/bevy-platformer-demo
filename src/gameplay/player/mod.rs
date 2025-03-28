@@ -98,9 +98,9 @@ fn player_controls(
 
     if let PlayerState::Jump = &state {
         controller.action(TnuaBuiltinJump {
-            height: GRAVITY * 0.75,
-            takeoff_extra_gravity: GRAVITY / 2.,
-            fall_extra_gravity: GRAVITY * 4.,
+            height: 75.,
+            takeoff_extra_gravity: GRAVITY / 30.,
+            fall_extra_gravity: GRAVITY,
             ..default()
         })
     }

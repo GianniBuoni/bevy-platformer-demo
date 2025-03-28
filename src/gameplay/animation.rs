@@ -114,11 +114,7 @@ fn animate_once(
         warn!("Sprite w/o texture atlas: {}", player);
         return;
     };
-    info!(
-        "index: {} > conpare: {}",
-        atlas.index,
-        config.first_sprite + config.sprite_count
-    );
+    // TODO look at this in an inspector
     if atlas.index >= config.first_sprite + config.sprite_count - 1 {
         input.jump = false;
         commands.entity(player).remove::<AnimateOnce>();

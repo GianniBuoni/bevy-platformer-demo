@@ -30,6 +30,9 @@ fn player_state(
     let mut new: PlayerState = PlayerState::default();
     let old = state.clone();
 
+    if input.movement_vector.x != 0. {
+        new = PlayerState::Run;
+    }
     let Ok(airborne) = controller.is_airborne() else {
         return;
     };
@@ -38,9 +41,6 @@ fn player_state(
     }
     if input.jump {
         new = PlayerState::Jump;
-    }
-    if input.movement_vector.x != 0. {
-        new = PlayerState::Run;
     }
     if new != old {
         commands.entity(player).insert(PlayerStateTransition);
