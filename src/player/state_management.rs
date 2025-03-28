@@ -1,6 +1,7 @@
 use crate::prelude::*;
 
 pub(super) fn plugin(app: &mut App) {
+    app.add_systems(Update, (validate_state).in_set(UpdateSets::TimersTick));
     app.add_systems(Update, (player_state).in_set(UpdateSets::StateManagement));
 }
 
@@ -22,22 +23,40 @@ impl PlayerStateTransition {
     }
 }
 
-/// Inital pass of state management based on input and
-/// the character controller.
-/// Certain animation dependant states are hanled and validated in the draw stage.
+/// System validates states that are determined in the last [`Update`]
+/// If ther current player state is no longer valid for animation,
+/// i.e. timer has finished, the player state system is allowed to run.
+fn validate_state(
+    mut player: Query<(Entity, &mut AnimationConfig), With<Player>>,
+    time: Res<Time>,
+    mut commands: Commands,
+) {
+    let (player, mut config) = get_single_mut!(player);
+    let mut should_transition = false;
+    if let Some(timer) = &config.animation_timer {
+        let mut timer = timer.clone();
+        timer.tick(time.delta());
+        should_transition = timer.finished();
+        config.animation_timer = Some(timer);
+    }
+
+    // Handle a state change
+    if should_transition {
+        commands.entity(player).remove::<AnimateOnce>();
+    }
+}
+
+/// State management based on input and the character controller.
+/// This system does not run if thes state is set to animate once.
 fn player_state(
     mut player: Query<
         (Entity, &TnuaController, &PlayerInput, &mut PlayerState),
-        With<Player>,
+        Without<AnimateOnce>,
     >,
     mut commands: Commands,
 ) {
     let (player, controller, input, state) = get_single_mut!(player);
     let old = state.clone();
-
-    if old == PlayerState::Jump {
-        return;
-    }
 
     let mut new = PlayerState::default();
     if input.x != 0. {
