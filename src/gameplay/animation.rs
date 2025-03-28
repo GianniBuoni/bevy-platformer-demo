@@ -1,29 +1,35 @@
 use std::time::Duration;
 
+use crate::gameplay::player::{Player, PlayerInput};
 use crate::prelude::*;
 
+use super::player::prelude::*;
+
 pub(super) fn plugin(app: &mut App) {
-    app.add_systems(Update, animate.in_set(UpdateSets::Update));
+    app.add_systems(
+        Update,
+        (animation_state, animate, animate_once)
+            .chain()
+            .in_set(UpdateSets::Draw),
+    );
 }
+
+#[derive(Component)]
+pub(super) struct AnimateOnce;
 
 #[derive(Component, Default)]
 pub(super) struct AnimationConfig {
-    first_sprite: usize,
-    last_sprite: usize,
-    frame_timer: Timer,
+    pub first_sprite: usize,
+    pub sprite_count: usize,
+    pub frame_timer: Timer,
 }
 
 impl AnimationConfig {
-    fn new(
-        first_sprite: usize,
-        last_sprite: usize,
-        fps: u8,
-        mode: TimerMode,
-    ) -> Self {
+    fn new(first_sprite: usize, last_sprite: usize, fps: u8) -> Self {
         Self {
             first_sprite,
-            last_sprite,
-            frame_timer: Self::timer_from_fps(fps, mode),
+            sprite_count: last_sprite,
+            frame_timer: Self::timer_from_fps(fps, TimerMode::Repeating),
         }
     }
     fn timer_from_fps(fps: u8, mode: TimerMode) -> Timer {
@@ -34,26 +40,87 @@ impl AnimationConfig {
 impl From<&EntityInstance> for AnimationConfig {
     fn from(value: &EntityInstance) -> Self {
         match value.identifier.as_str() {
-            "Player" => AnimationConfig::new(0, 4, 6, TimerMode::Repeating),
-            _ => AnimationConfig::new(1, 2, 6, TimerMode::Once),
+            "Player" => AnimationConfig::new(0, 4, 6),
+            _ => AnimationConfig::new(1, 2, 6),
+        }
+    }
+}
+
+fn animation_state(
+    mut player: Query<
+        (
+            Entity,
+            &mut AnimationConfig,
+            &PlayerState,
+            &PlayerStateTransition,
+        ),
+        With<Player>,
+    >,
+    mut commands: Commands,
+) {
+    {
+        let (player, mut config, state, _transition) = get_single_mut!(player);
+        match state {
+            PlayerState::Idle => {
+                *config = AnimationConfig::new(0, 5, 8);
+            }
+            PlayerState::Run => {
+                *config = AnimationConfig::new(6, 6, 8);
+            }
+            PlayerState::Jump => {
+                *config = AnimationConfig::new(12, 3, 8);
+                commands.entity(player).insert(AnimateOnce);
+            }
+            PlayerState::Fall => {
+                *config = AnimationConfig::new(18, 1, 8);
+            }
         }
     }
 }
 
 fn animate(
     time: Res<Time>,
+    input: Res<PlayerInput>,
     mut query: Query<(&mut AnimationConfig, &mut Sprite)>,
 ) {
     for (mut config, mut sprite) in &mut query {
         config.frame_timer.tick(time.delta());
+
         if config.frame_timer.just_finished() {
+            match input.movement_vector.x {
+                -1. => sprite.flip_x = true,
+                1. => sprite.flip_x = false,
+                _ => (),
+            }
+
             if let Some(atlas) = &mut sprite.texture_atlas {
-                if atlas.index == config.last_sprite {
-                    atlas.index = config.first_sprite;
-                } else {
-                    atlas.index += 1
-                }
+                atlas.index = (atlas.index + 1) % config.sprite_count
+                    + config.first_sprite;
             }
         }
+    }
+}
+
+fn animate_once(
+    player: Query<
+        (Entity, &AnimationConfig, &AnimateOnce, &Sprite),
+        With<Player>,
+    >,
+    mut input: ResMut<PlayerInput>,
+    mut commands: Commands,
+) {
+    let (player, config, _, sprite) = get_single!(player);
+    let Some(atlas) = &sprite.texture_atlas else {
+        warn!("Sprite w/o texture atlas: {}", player);
+        return;
+    };
+    info!(
+        "index: {} > conpare: {}",
+        atlas.index,
+        config.first_sprite + config.sprite_count
+    );
+    if atlas.index >= config.first_sprite + config.sprite_count - 1 {
+        input.jump = false;
+        commands.entity(player).remove::<AnimateOnce>();
     }
 }

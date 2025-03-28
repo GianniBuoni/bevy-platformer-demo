@@ -17,7 +17,9 @@ impl Plugin for AppPlugin {
             (
                 UpdateSets::TimersTick,
                 UpdateSets::RecordInput,
+                UpdateSets::StateManagement,
                 UpdateSets::Update,
+                UpdateSets::Draw,
             )
                 .chain(),
         );
@@ -48,5 +50,7 @@ impl Plugin for AppPlugin {
 pub enum UpdateSets {
     TimersTick,
     RecordInput,
+    StateManagement,
     Update,
+    Draw,
 }
