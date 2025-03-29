@@ -1,9 +1,4 @@
 use crate::prelude::*;
-use bevy_tnua::{
-    TnuaGhostSensor, TnuaProximitySensor,
-    control_helpers::TnuaSimpleFallThroughPlatformsHelper,
-};
-use bevy_tnua_avian2d::*;
 
 pub(crate) mod prelude {
     pub(crate) use super::Player;
@@ -12,6 +7,9 @@ pub(crate) mod prelude {
         PlayerState, PlayerStateTransition,
     };
 }
+
+use controller::{PlayerPhysics, PlayerPlatform};
+use state_management::PlayerStateComponent;
 
 mod controller;
 mod input;
@@ -29,14 +27,11 @@ pub(super) fn plugin(app: &mut App) {
 #[derive(Component, Default)]
 #[require(
     Name(|| Name::new("Player")),
-    RigidBody(|| RigidBody::Dynamic),
-    Collider(|| Collider::capsule(8., 9.)),
-    ColliderDensity(|| ColliderDensity(100.)),
-    TnuaController,
-    TnuaAvian2dSensorShape(|| TnuaAvian2dSensorShape(Collider::rectangle(14., 0.))),
-    PlayerState,
-    PlayerStateTransition,
+    PlayerPhysics,
+    PlayerStateComponent,
     PlayerInput,
+    PlayerPlatform,
+    OrthoMovement
 )]
 pub struct Player;
 
@@ -47,13 +42,4 @@ struct PlayerBundle {
     sprite_sheet: Sprite,
     #[from_entity_instance]
     animation_player: AnimationConfig,
-    plafrom_bundle: PlatformBundle,
-    movement_bundle: OrthoMovementBundle,
-}
-
-#[derive(Bundle, Default)]
-struct PlatformBundle {
-    ghost_sensor: TnuaGhostSensor,
-    poxinity_sensor: TnuaProximitySensor,
-    control_helper: TnuaSimpleFallThroughPlatformsHelper,
 }

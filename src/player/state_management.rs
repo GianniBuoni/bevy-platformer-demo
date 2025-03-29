@@ -5,6 +5,10 @@ pub(super) fn plugin(app: &mut App) {
     app.add_systems(Update, (player_state).in_set(UpdateSets::StateManagement));
 }
 
+#[derive(Component, Default)]
+#[require(PlayerState, PlayerStateTransition)]
+pub struct PlayerStateComponent;
+
 #[derive(Component, Default, Clone, PartialEq, Eq, Debug)]
 pub enum PlayerState {
     #[default]
