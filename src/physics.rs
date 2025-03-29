@@ -3,7 +3,7 @@ use bevy_tnua_avian2d::TnuaAvian2dPlugin;
 
 #[allow(unused_imports)]
 pub(crate) mod prelude {
-    pub(crate) use super::{GRAVITY, GameLayer};
+    pub(crate) use super::GRAVITY;
 }
 
 pub const GRAVITY: f32 = 300.;
@@ -17,12 +17,4 @@ pub(super) fn plugin(app: &mut App) {
     app.insert_resource(Gravity(Vec2::new(0., -GRAVITY)));
     #[cfg(debug_assertions)]
     app.add_plugins(PhysicsDebugPlugin::default());
-}
-
-#[derive(PhysicsLayer, Default)]
-pub enum GameLayer {
-    #[default]
-    Default,
-    Player,
-    Platforms,
 }

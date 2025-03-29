@@ -4,6 +4,7 @@ pub(crate) mod prelude {
     pub(crate) use super::animation::AnimateOnce;
     pub(crate) use super::animation_config::AnimationConfig;
     pub(crate) use super::level_entitiy_movement::OrthoMovement;
+    pub(crate) use super::platforms::Platform;
 }
 
 mod animation;

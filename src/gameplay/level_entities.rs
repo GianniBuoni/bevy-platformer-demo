@@ -5,6 +5,7 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 #[derive(Component, Default)]
+#[require(Platform)]
 struct PalmTop;
 
 #[derive(LdtkEntity, Bundle, Default)]
