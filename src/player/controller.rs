@@ -5,10 +5,13 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 fn player_controls(
-    mut player: Query<(&mut TnuaController, &PlayerInput), With<Player>>,
+    mut player: Query<
+        (&mut TnuaController, &HorizontalDirection, &PlayerInput),
+        With<Player>,
+    >,
 ) {
-    let (mut controller, input) = get_single_mut!(player);
-    let input_vector: Vec3 = Vec3::new(input.x, 0., 0.);
+    let (mut controller, dir, input) = get_single_mut!(player);
+    let input_vector: Vec3 = Vec3::new(dir.0, 0., 0.);
 
     controller.basis(TnuaBuiltinWalk {
         desired_velocity: input_vector * 100.,

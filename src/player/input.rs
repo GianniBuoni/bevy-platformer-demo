@@ -6,15 +6,20 @@ pub(super) fn plugin(app: &mut App) {
 
 #[derive(Component, Default)]
 pub struct PlayerInput {
-    pub x: f32,
     pub jump: bool,
 }
 
+#[derive(Component, Default)]
+pub struct HorizontalDirection(pub f32);
+
 fn player_input(
     kb_input: Res<ButtonInput<KeyCode>>,
-    mut player: Query<&mut PlayerInput, With<Player>>,
+    mut player: Query<
+        (&mut PlayerInput, &mut HorizontalDirection),
+        With<Player>,
+    >,
 ) {
-    let mut input = get_single_mut!(player);
+    let (mut input, mut movenent) = get_single_mut!(player);
     let left: f32 = if kb_input.any_pressed([
         KeyCode::ArrowLeft,
         KeyCode::KeyH,
@@ -33,6 +38,6 @@ fn player_input(
     } else {
         0.
     };
-    input.x = right - left;
+    movenent.0 = right - left;
     input.jump = kb_input.just_pressed(KeyCode::Space);
 }

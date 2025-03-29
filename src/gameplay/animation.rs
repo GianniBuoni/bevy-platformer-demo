@@ -3,7 +3,11 @@ use crate::prelude::*;
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(
         Update,
-        (animation_transition, handle_animation)
+        (
+            animation_transition,
+            handle_sprite_direction,
+            handle_animation,
+        )
             .chain()
             .in_set(UpdateSets::Draw),
     );
@@ -47,20 +51,26 @@ fn animation_transition(
     }
 }
 
+fn handle_sprite_direction(
+    mut sprite: Query<(&HorizontalDirection, &mut Sprite)>,
+) {
+    for (direction, mut sprite) in &mut sprite {
+        match direction.0 {
+            -1. => sprite.flip_x = true,
+            1. => sprite.flip_x = false,
+            _ => (),
+        }
+    }
+}
+
 /// After all the animation checks are done, atlas indexes are updated.
 fn handle_animation(
     time: Res<Time>,
-    mut query: Query<(&mut AnimationConfig, &PlayerInput, &mut Sprite)>,
+    mut query: Query<(&mut AnimationConfig, &mut Sprite)>,
 ) {
-    for (mut config, input, mut sprite) in &mut query {
+    for (mut config, mut sprite) in &mut query {
         config.frame_timer.tick(time.delta());
         if config.frame_timer.just_finished() {
-            match input.x {
-                -1. => sprite.flip_x = true,
-                1. => sprite.flip_x = false,
-                _ => (),
-            }
-
             if let Some(atlas) = &mut sprite.texture_atlas {
                 atlas.index = (atlas.index + 1) % config.sprite_count
                     + config.first_sprite;

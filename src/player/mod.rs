@@ -3,7 +3,7 @@ use bevy_tnua_avian2d::*;
 
 pub(crate) mod prelude {
     pub(crate) use super::Player;
-    pub(crate) use super::input::PlayerInput;
+    pub(crate) use super::input::{HorizontalDirection, PlayerInput};
     pub(crate) use super::state_management::{
         PlayerState, PlayerStateTransition,
     };
@@ -34,6 +34,7 @@ pub(super) fn plugin(app: &mut App) {
     PlayerState,
     PlayerStateTransition,
     PlayerInput,
+    HorizontalDirection,
 )]
 pub struct Player;
 

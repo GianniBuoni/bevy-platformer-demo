@@ -50,16 +50,21 @@ fn validate_state(
 /// This system does not run if thes state is set to animate once.
 fn player_state(
     mut player: Query<
-        (Entity, &TnuaController, &PlayerInput, &mut PlayerState),
+        (
+            Entity,
+            &TnuaController,
+            &HorizontalDirection,
+            &mut PlayerState,
+        ),
         Without<AnimateOnce>,
     >,
     mut commands: Commands,
 ) {
-    let (player, controller, input, state) = get_single_mut!(player);
+    let (player, controller, dir, state) = get_single_mut!(player);
     let old = state.clone();
 
     let mut new = PlayerState::default();
-    if input.x != 0. {
+    if dir.0 != 0. {
         new = PlayerState::Run;
     }
     if let Ok(airborne) = controller.is_airborne() {
