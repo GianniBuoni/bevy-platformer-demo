@@ -67,10 +67,8 @@ fn spawn_wall_colliders(
                 let LayerInstance {
                     c_wid: width,
                     c_hei: height,
-                    grid_size,
                     ..
                 } = loaded_level.layer_instances()[0];
-                info_once!("width: {}, height: {}", width, height);
 
                 // combine wall tiles into flat "plates" in each individual row
                 let mut plate_stack: Vec<Vec<Plate>> = Vec::new();
@@ -144,20 +142,20 @@ fn spawn_wall_colliders(
                                 (wall_rect.right as f32
                                     - wall_rect.left as f32
                                     + 1.)
-                                    * grid_size as f32,
+                                    * GRID_SIZE,
                                 (wall_rect.top as f32
                                     - wall_rect.bottom as f32
                                     + 1.)
-                                    * grid_size as f32,
+                                    * GRID_SIZE,
                             ))
                             .insert(RigidBody::Static)
                             .insert(Friction::new(1.0))
                             .insert(Transform::from_xyz(
                                 (wall_rect.left + wall_rect.right + 1) as f32
-                                    * grid_size as f32
+                                    * GRID_SIZE
                                     / 2.,
                                 (wall_rect.bottom + wall_rect.top + 1) as f32
-                                    * grid_size as f32
+                                    * GRID_SIZE
                                     / 2.,
                                 0.,
                             ))

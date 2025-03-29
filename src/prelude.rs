@@ -12,6 +12,7 @@ pub(crate) use bevy_tnua::prelude::*;
 
 pub(crate) const GAME_W: f32 = 640.;
 pub(crate) const GAME_H: f32 = 360.;
+pub(crate) const GRID_SIZE: f32 = 32.;
 
 #[macro_export]
 macro_rules! get_single {
