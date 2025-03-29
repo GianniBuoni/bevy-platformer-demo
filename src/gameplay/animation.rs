@@ -23,7 +23,7 @@ fn animation_transition(
     mut player: Query<(
         Entity,
         &mut AnimationConfig,
-        &mut PlayerState,
+        &mut PlayerActions,
         &PlayerStateTransition,
     )>,
     mut commands: Commands,
@@ -32,17 +32,17 @@ fn animation_transition(
         let (player, mut config, mut state, transition) =
             get_single_mut!(player);
         match transition.0 {
-            PlayerState::Idle => {
+            PlayerActions::Idle => {
                 *config = AnimationConfig::new(0, 5, 8, true);
             }
-            PlayerState::Run => {
+            PlayerActions::Run => {
                 *config = AnimationConfig::new(6, 6, 8, true);
             }
-            PlayerState::Jump => {
+            PlayerActions::Jump => {
                 *config = AnimationConfig::new(12, 3, 8, false);
                 commands.entity(player).insert(AnimateOnce);
             }
-            PlayerState::Fall => {
+            PlayerActions::Fall => {
                 *config = AnimationConfig::new(18, 1, 8, true);
             }
         }

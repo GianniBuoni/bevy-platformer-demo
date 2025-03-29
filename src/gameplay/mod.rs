@@ -3,7 +3,7 @@ use crate::prelude::*;
 pub(crate) mod prelude {
     pub(crate) use super::animation::AnimateOnce;
     pub(crate) use super::animation_config::AnimationConfig;
-    pub(crate) use super::level_entitiy_movement::OrthoMovementBundle;
+    pub(crate) use super::level_entitiy_movement::OrthoMovement;
 }
 
 mod animation;

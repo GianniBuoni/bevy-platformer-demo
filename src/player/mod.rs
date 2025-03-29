@@ -4,12 +4,12 @@ pub(crate) mod prelude {
     pub(crate) use super::Player;
     pub(crate) use super::input::{HorizontalDirection, PlayerInput};
     pub(crate) use super::state_management::{
-        PlayerState, PlayerStateTransition,
+        PlayerActions, PlayerStateTransition,
     };
 }
 
 use controller::{PlayerPhysics, PlayerPlatform};
-use state_management::PlayerStateComponent;
+use state_management::PlayerState;
 
 mod controller;
 mod input;
@@ -28,7 +28,7 @@ pub(super) fn plugin(app: &mut App) {
 #[require(
     Name(|| Name::new("Player")),
     PlayerPhysics,
-    PlayerStateComponent,
+    PlayerState,
     PlayerInput,
     PlayerPlatform,
     OrthoMovement
