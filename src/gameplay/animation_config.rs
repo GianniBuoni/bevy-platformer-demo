@@ -54,8 +54,8 @@ impl AnimationConfig {
 impl From<&EntityInstance> for AnimationConfig {
     fn from(value: &EntityInstance) -> Self {
         match value.identifier.as_str() {
-            "Player" => AnimationConfig::new(0, 4, 6, true),
-            _ => AnimationConfig::new(1, 2, 6, true),
+            "Player" => AnimationConfig::new(0, 4, 8, true),
+            _ => AnimationConfig::new(0, 2, 6, true),
         }
     }
 }
