@@ -3,11 +3,11 @@ use crate::prelude::*;
 pub(super) fn plugin(app: &mut App) {
     app.register_ldtk_entity::<PalmBundle>("PalmTop");
     app.register_ldtk_entity::<DecorBundle>("Door");
-    app.register_ldtk_entity::<DecorBundle>("Candle");
-    app.register_ldtk_entity::<DecorBundle>("CandleLight");
-    app.register_ldtk_entity::<DecorBundle>("Window");
-    app.register_ldtk_entity::<DecorBundle>("ChainSmall");
-    app.register_ldtk_entity::<DecorBundle>("ChainBig");
+    app.register_ldtk_entity::<AnimatedDecorBundle>("Candle");
+    app.register_ldtk_entity::<AnimatedDecorBundle>("CandleLight");
+    app.register_ldtk_entity::<AnimatedDecorBundle>("Window");
+    app.register_ldtk_entity::<AnimatedDecorBundle>("ChainSmall");
+    app.register_ldtk_entity::<AnimatedDecorBundle>("ChainBig");
 }
 
 #[derive(Component, Default)]
@@ -27,4 +27,12 @@ struct PalmBundle {
 struct DecorBundle {
     #[sprite_sheet]
     sprite: Sprite,
+}
+
+#[derive(LdtkEntity, Bundle, Default)]
+struct AnimatedDecorBundle {
+    #[sprite_sheet]
+    sprite: Sprite,
+    #[from_entity_instance]
+    animation_config: AnimationConfig,
 }

@@ -148,7 +148,7 @@
 		},
 		{
 			"__type": "Entities",
-			"identifier": "Details2",
+			"identifier": "Decor",
 			"type": "Entities",
 			"uid": 237,
 			"doc": null,
@@ -3898,7 +3898,7 @@
 			"fillOpacity": 1,
 			"lineOpacity": 1,
 			"hollow": false,
-			"color": "#DDC6A1",
+			"color": "#9DB3CA",
 			"renderMode": "Rectangle",
 			"showName": true,
 			"tilesetId": null,
@@ -4226,7 +4226,7 @@
 					]
 				},
 				{
-					"__identifier": "Details2",
+					"__identifier": "Decor",
 					"__type": "Entities",
 					"__cWid": 40,
 					"__cHei": 24,
@@ -4640,7 +4640,7 @@
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": null,
-							"__smartColor": "#DDC6A1",
+							"__smartColor": "#9DB3CA",
 							"iid": "cee725a0-e920-11ef-9820-970aad46d415",
 							"width": 640,
 							"height": 384,

@@ -72,8 +72,7 @@ fn handle_animation(
         config.frame_timer.tick(time.delta());
         if config.frame_timer.just_finished() {
             if let Some(atlas) = &mut sprite.texture_atlas {
-                atlas.index = (atlas.index + 1) % config.sprite_count
-                    + config.first_sprite;
+                atlas.index = config.get_new_index();
             }
         }
     }

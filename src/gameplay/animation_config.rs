@@ -5,6 +5,7 @@ use std::time::Duration;
 pub struct AnimationConfig {
     pub first_sprite: usize,
     pub sprite_count: usize,
+    pub relative_current_index: usize,
     pub frame_timer: Timer,
     pub animation_timer: Option<Timer>,
 }
@@ -19,6 +20,7 @@ impl AnimationConfig {
         Self {
             first_sprite,
             sprite_count,
+            relative_current_index: 0,
             frame_timer: Self::timer_from_fps(fps),
             animation_timer: Self::timer_from_frame_count(
                 fps,
@@ -48,15 +50,23 @@ impl AnimationConfig {
             )),
         }
     }
+    pub fn get_new_index(&mut self) -> usize {
+        self.relative_current_index += 1;
+        self.relative_current_index % self.sprite_count + self.first_sprite
+    }
 }
 
 // Default comfigurations for animated LDTK entites
 impl From<&EntityInstance> for AnimationConfig {
     fn from(value: &EntityInstance) -> Self {
         match value.identifier.as_str() {
-            "Player" => AnimationConfig::new(0, 4, 8, true),
             "PalmTop" => AnimationConfig::new(0, 4, 4, true),
-            _ => AnimationConfig::new(0, 2, 6, true),
+            "Candle" => AnimationConfig::new(32, 6, 10, true),
+            "CandleLight" => AnimationConfig::new(40, 4, 4, true),
+            "ChainSmall" => AnimationConfig::new(16, 8, 2, true),
+            "ChainBig" => AnimationConfig::new(24, 8, 2, true),
+            "Window" => AnimationConfig::new(48, 72, 10, true),
+            _ => AnimationConfig::new(0, 4, 10, true),
         }
     }
 }
