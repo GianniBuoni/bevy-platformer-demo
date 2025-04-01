@@ -3,15 +3,15 @@ use crate::prelude::*;
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(Update, (validate_state).in_set(UpdateSets::TimersTick));
     app.add_systems(Update, (player_state).in_set(UpdateSets::StateManagement));
-    app.register_type::<PlayerActions>();
+    app.register_type::<AnimationState>();
 }
 
 #[derive(Component, Default)]
-#[require(PlayerActions, PlayerStateTransition)]
+#[require(AnimationState, TransitionStates)]
 pub struct PlayerState;
 
 #[derive(Component, Default, Clone, PartialEq, Eq, Debug, Reflect)]
-pub enum PlayerActions {
+pub enum AnimationState {
     #[default]
     Idle,
     Run,
@@ -20,10 +20,10 @@ pub enum PlayerActions {
 }
 
 #[derive(Component, Default)]
-pub struct PlayerStateTransition(pub PlayerActions);
+pub struct TransitionStates(pub AnimationState);
 
-impl PlayerStateTransition {
-    pub fn new(state: PlayerActions) -> Self {
+impl TransitionStates {
+    pub fn new(state: AnimationState) -> Self {
         Self(state)
     }
 }
@@ -59,7 +59,7 @@ fn player_state(
             Entity,
             &TnuaController,
             &HorizontalDirection,
-            &mut PlayerActions,
+            &mut AnimationState,
         ),
         Without<AnimateOnce>,
     >,
@@ -68,23 +68,21 @@ fn player_state(
     let (player, controller, dir, state) = get_single_mut!(player);
     let old = state.clone();
 
-    let mut new = PlayerActions::default();
+    let mut new = AnimationState::default();
     if dir.0 != 0. {
-        new = PlayerActions::Run;
+        new = AnimationState::Run;
     }
     if let Ok(airborne) = controller.is_airborne() {
-        new = if airborne { PlayerActions::Fall } else { new };
+        new = if airborne { AnimationState::Fall } else { new };
     }
     if let Some(action) = controller.action_flow_status().ongoing() {
         new = if action == "TnuaBuiltinJump" {
-            PlayerActions::Jump
+            AnimationState::Jump
         } else {
             new
         }
     }
     if old != new {
-        commands
-            .entity(player)
-            .insert(PlayerStateTransition::new(new));
+        commands.entity(player).insert(TransitionStates::new(new));
     }
 }

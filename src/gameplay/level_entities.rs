@@ -19,8 +19,6 @@ struct PalmBundle {
     palm_top: PalmTop,
     #[sprite_sheet]
     sprite: Sprite,
-    #[from_entity_instance]
-    animation_config: AnimationConfig,
 }
 
 #[derive(LdtkEntity, Bundle, Default)]
@@ -33,6 +31,4 @@ struct DecorBundle {
 struct AnimatedDecorBundle {
     #[sprite_sheet]
     sprite: Sprite,
-    #[from_entity_instance]
-    animation_config: AnimationConfig,
 }

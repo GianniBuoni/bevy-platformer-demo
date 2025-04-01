@@ -1,24 +1,28 @@
-use crate::prelude::*;
 use std::time::Duration;
 
+use bevy::{
+    prelude::Component,
+    time::{Timer, TimerMode},
+};
+
 #[derive(Component, Default)]
-pub struct AnimationConfig {
-    pub first_sprite: usize,
-    pub sprite_count: usize,
-    pub relative_current_index: usize,
-    pub frame_timer: Timer,
-    pub animation_timer: Option<Timer>,
+pub struct Config {
+    first_index: usize,
+    sprite_count: usize,
+    relative_current_index: usize,
+    frame_timer: Timer,
+    animation_timer: Option<Timer>,
 }
 
-impl AnimationConfig {
+impl Config {
     pub fn new(
-        first_sprite: usize,
+        first_index: usize,
         sprite_count: usize,
         fps: u8,
         repeat: bool,
     ) -> Self {
         Self {
-            first_sprite,
+            first_index,
             sprite_count,
             relative_current_index: 0,
             frame_timer: Self::timer_from_fps(fps),
@@ -52,21 +56,6 @@ impl AnimationConfig {
     }
     pub fn get_new_index(&mut self) -> usize {
         self.relative_current_index += 1;
-        self.relative_current_index % self.sprite_count + self.first_sprite
-    }
-}
-
-// Default comfigurations for animated LDTK entites
-impl From<&EntityInstance> for AnimationConfig {
-    fn from(value: &EntityInstance) -> Self {
-        match value.identifier.as_str() {
-            "PalmTop" => AnimationConfig::new(0, 4, 4, true),
-            "Candle" => AnimationConfig::new(32, 6, 10, true),
-            "CandleLight" => AnimationConfig::new(40, 4, 4, true),
-            "ChainSmall" => AnimationConfig::new(16, 8, 2, true),
-            "ChainBig" => AnimationConfig::new(24, 8, 2, true),
-            "Window" => AnimationConfig::new(48, 72, 10, true),
-            _ => AnimationConfig::new(0, 4, 10, true),
-        }
+        self.relative_current_index % self.sprite_count + self.first_index
     }
 }
