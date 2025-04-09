@@ -1,6 +1,7 @@
 use crate::prelude::*;
 use bevy::window::WindowResolution;
-#[cfg(debug_assertions)]
+
+#[cfg(feature = "debug")]
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
 mod camera;
@@ -40,9 +41,8 @@ impl Plugin for AppPlugin {
                 })
                 .set(ImagePlugin::default_nearest()),
         );
-        #[cfg(debug_assertions)]
+        #[cfg(feature = "debug")]
         app.add_plugins(WorldInspectorPlugin::new());
-        // add module plugins
         app.add_plugins((
             camera::plugin,
             gameplay::plugin,

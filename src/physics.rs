@@ -15,6 +15,6 @@ pub(super) fn plugin(app: &mut App) {
         TnuaAvian2dPlugin::new(FixedUpdate),
     ));
     app.insert_resource(Gravity(Vec2::new(0., -GRAVITY)));
-    #[cfg(debug_assertions)]
+    #[cfg(feature = "debug")]
     app.add_plugins(PhysicsDebugPlugin::default());
 }
