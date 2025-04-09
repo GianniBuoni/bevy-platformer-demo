@@ -11,13 +11,19 @@
       vulkan-loader
     ];
 
-  scripts = {
-    cr.exec = ''
-      cargo clippy && cargo run
-    '';
-    crr.exec = ''
-      cargo clippy && cargo run --release
-    '';
+  tasks = {
+    "check:check".exec = "cargo check";
+    "check:lint" = {
+      exec = "cargo clippy";
+      after = ["check:check"];
+      before = ["run:debug"];
+    };
+    "run:debug" = {
+      exec = "cargo run --features debug";
+    };
+    "run:release" = {
+      exec = "cargo run --release";
+    };
   };
 
   languages.rust = {
