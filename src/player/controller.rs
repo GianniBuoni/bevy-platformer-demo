@@ -3,6 +3,7 @@ use bevy_tnua_avian2d::*;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(Update, player_controls.in_set(TnuaUserControlsSystemSet));
+    app.add_systems(Update, deceleration.in_set(UpdateSets::Update));
 }
 
 #[derive(Component, Default)]
@@ -45,4 +46,16 @@ fn player_controls(
 
 fn player_sensor_shape() -> TnuaAvian2dSensorShape {
     TnuaAvian2dSensorShape(Collider::rectangle(8., 0.))
+}
+
+fn deceleration(
+    mut player: Query<
+        (&mut LinearVelocity, &HorizontalDirection),
+        With<Player>,
+    >,
+) {
+    let (mut velocity, dir) = get_single_mut!(player);
+    if dir.0 == 0. {
+        velocity.x *= 0.95;
+    }
 }
