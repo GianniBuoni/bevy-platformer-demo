@@ -1,17 +1,19 @@
 use std::time::Duration;
 
-use bevy::{
-    prelude::Component,
-    time::{Timer, TimerMode},
-};
+use crate::prelude::*;
 
-#[derive(Component, Default)]
+pub(super) fn plugin(app: &mut App) {
+    app.register_type::<(Config, ConfigDirection)>();
+}
+
+#[derive(Component, Reflect, Default, Debug, PartialEq, Clone)]
+#[require(ConfigDirection)]
 pub struct Config {
     first_index: usize,
     sprite_count: usize,
     relative_current_index: usize,
-    frame_timer: Timer,
-    animation_timer: Option<Timer>,
+    pub frame_timer: Timer,
+    pub animation_timer: Option<Timer>,
 }
 
 impl Config {

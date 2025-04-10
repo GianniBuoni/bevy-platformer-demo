@@ -1,70 +1,39 @@
 use crate::prelude::*;
 
-pub(super) fn plugin(app: &mut App) {
-    app.add_systems(
-        Update,
-        (
-            animation_transition,
-            handle_sprite_direction,
-            handle_animation,
-        )
-            .chain()
-            .in_set(UpdateSets::Draw),
-    );
-}
-
-#[derive(Component, Default)]
-pub struct AnimateOnce;
-
-// TODO make generic and apply this to enemiess as well.
-/// System resets animation comfigurations.
-/// Runs if a [`TransitionStates`] component is bundled with the entity.
-fn animation_transition(
-    mut player: Query<(
-        Entity,
-        &mut AnimationConfig,
-        &mut AnimationState,
-        &TransitionStates,
-    )>,
-    mut commands: Commands,
-) {
-    {
-        let (player, mut config, mut state, transition) =
-            get_single_mut!(player);
-        match transition.0 {
-            AnimationState::Idle => {
-                *config = AnimationConfig::new(0, 5, 8, true);
-            }
-            AnimationState::Run => {
-                *config = AnimationConfig::new(6, 6, 8, true);
-            }
-            AnimationState::Jump => {
-                *config = AnimationConfig::new(12, 3, 8, false);
-                commands.entity(player).insert(AnimateOnce);
-            }
-            AnimationState::Fall => {
-                *config = AnimationConfig::new(18, 1, 8, true);
-            }
-        }
-        *state = transition.0.clone();
-        commands.entity(player).remove::<TransitionStates>();
+pub(super) fn plugin(schedule: impl SystemSet + Clone) -> impl Fn(&mut App) {
+    move |app| {
+        app.add_systems(
+            Update,
+            (handle_sprite_direction, handle_animation)
+                .in_set(schedule.clone())
+                .chain(),
+        );
     }
 }
 
-fn handle_sprite_direction(
-    mut sprite: Query<(&HorizontalDirection, &mut Sprite)>,
-) {
-    sprite.iter_mut().for_each(|(dir, mut sprite)| match dir.0 {
-        -1. => sprite.flip_x = true,
-        1. => sprite.flip_x = false,
-        _ => (),
-    });
+#[allow(dead_code)]
+fn handle_animation_transition() {
+    todo!()
+    // tick timers
+    // validate state
+    // set state if needed
+    // replace config
+}
+
+fn handle_sprite_direction(mut sprite: Query<(&ConfigDirection, &mut Sprite)>) {
+    sprite
+        .iter_mut()
+        .for_each(|(dir, mut sprite)| match dir.x() {
+            -1. => sprite.flip_x = true,
+            1. => sprite.flip_x = false,
+            _ => (),
+        });
 }
 
 /// After all the animation checks are done, atlas indexes are updated.
 fn handle_animation(
     time: Res<Time>,
-    mut query: Query<(&mut AnimationConfig, &mut Sprite)>,
+    mut query: Query<(&mut Config, &mut Sprite)>,
 ) {
     query.iter_mut().for_each(|(mut config, mut sprite)| {
         config.frame_timer.tick(time.delta());

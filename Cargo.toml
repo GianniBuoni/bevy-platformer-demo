@@ -16,6 +16,8 @@ bevy-tnua-avian2d = "0.3.1"
 bevy-tnua = "0.22.0"
 bevy-inspector-egui = { version = "0.30.0", optional = true }
 
+animation = {path = "./animation/"}
+
 [features]
 default = []
 debug = ["bevy-inspector-egui"]
