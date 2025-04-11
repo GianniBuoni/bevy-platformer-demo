@@ -20,7 +20,7 @@ struct PalmBundle {
     #[sprite_sheet]
     sprite: Sprite,
     #[from_entity_instance]
-    animation_config: AnimationConfig,
+    entity_instance: EntityInstance,
 }
 
 #[derive(LdtkEntity, Bundle, Default)]
@@ -34,5 +34,5 @@ struct AnimatedDecorBundle {
     #[sprite_sheet]
     sprite: Sprite,
     #[from_entity_instance]
-    animation_config: AnimationConfig,
+    entity_instance: EntityInstance,
 }

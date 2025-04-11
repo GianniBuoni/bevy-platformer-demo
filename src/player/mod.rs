@@ -30,4 +30,6 @@ struct PlayerBundle {
     player: Player,
     #[sprite_sheet]
     sprite_sheet: Sprite,
+    #[from_entity_instance]
+    entity_instance: EntityInstance,
 }
