@@ -21,13 +21,11 @@ fn handle_animation_transition() {
 }
 
 fn handle_sprite_direction(mut sprite: Query<(&ConfigDirection, &mut Sprite)>) {
-    sprite
-        .iter_mut()
-        .for_each(|(dir, mut sprite)| match dir.x() {
-            -1. => sprite.flip_x = true,
-            1. => sprite.flip_x = false,
-            _ => (),
-        });
+    sprite.iter_mut().for_each(|(dir, mut sprite)| match dir.x {
+        -1. => sprite.flip_x = true,
+        1. => sprite.flip_x = false,
+        _ => (),
+    });
 }
 
 /// After all the animation checks are done, atlas indexes are updated.

@@ -1,4 +1,5 @@
 use crate::prelude::*;
+use animation::prelude::ConfigDirection;
 use bevy_tnua_avian2d::*;
 
 pub(super) fn plugin(app: &mut App) {
@@ -21,12 +22,12 @@ pub struct PlayerPlatform;
 
 fn player_controls(
     mut player: Query<
-        (&mut TnuaController, &HorizontalDirection, &PlayerInput),
+        (&mut TnuaController, &ConfigDirection, &PlayerInput),
         With<Player>,
     >,
 ) {
     let (mut controller, dir, input) = get_single_mut!(player);
-    let input_vector: Vec3 = Vec3::new(dir.0, 0., 0.);
+    let input_vector: Vec3 = dir.extend(0.);
 
     controller.basis(TnuaBuiltinWalk {
         desired_velocity: input_vector * 100.,
@@ -49,13 +50,10 @@ fn player_sensor_shape() -> TnuaAvian2dSensorShape {
 }
 
 fn deceleration(
-    mut player: Query<
-        (&mut LinearVelocity, &HorizontalDirection),
-        With<Player>,
-    >,
+    mut player: Query<(&mut LinearVelocity, &ConfigDirection), With<Player>>,
 ) {
     let (mut velocity, dir) = get_single_mut!(player);
-    if dir.0 == 0. {
+    if dir.x == 0. {
         velocity.x *= 0.95;
     }
 }

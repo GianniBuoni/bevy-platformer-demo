@@ -2,7 +2,7 @@ use crate::prelude::*;
 
 pub(crate) mod prelude {
     pub(crate) use super::Player;
-    pub(crate) use super::input::{HorizontalDirection, PlayerInput};
+    pub(crate) use super::input::PlayerInput;
 }
 
 use controller::{PlayerPhysics, PlayerPlatform};
