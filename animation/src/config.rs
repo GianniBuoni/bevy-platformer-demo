@@ -6,6 +6,9 @@ pub(super) fn plugin(app: &mut App) {
     app.register_type::<(Config, ConfigDirection)>();
 }
 
+#[derive(Component, Debug, Default, PartialEq)]
+pub struct Transition(Config);
+
 #[derive(Component, Reflect, Default, Debug, PartialEq, Clone)]
 #[require(ConfigDirection)]
 pub struct Config {
@@ -14,6 +17,12 @@ pub struct Config {
     relative_current_index: usize,
     pub frame_timer: Timer,
     pub animation_timer: Option<Timer>,
+}
+
+impl From<&Transition> for Config {
+    fn from(value: &Transition) -> Self {
+        value.0.clone()
+    }
 }
 
 impl Config {

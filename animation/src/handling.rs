@@ -4,20 +4,27 @@ pub(super) fn plugin(schedule: impl SystemSet + Clone) -> impl Fn(&mut App) {
     move |app| {
         app.add_systems(
             Update,
-            (handle_sprite_direction, handle_animation)
+            (
+                handle_animation_transiton,
+                handle_sprite_direction,
+                handle_animation,
+            )
                 .in_set(schedule.clone())
                 .chain(),
         );
     }
 }
 
-#[allow(dead_code)]
-fn handle_animation_transition() {
-    todo!()
-    // tick timers
-    // validate state
-    // set state if needed
-    // replace config
+fn handle_animation_transiton(
+    mut query: Query<(Entity, &mut Config, &Transition)>,
+    mut command: Commands,
+) {
+    query
+        .iter_mut()
+        .for_each(|(entity, mut config, transition)| {
+            *config = transition.into();
+            command.entity(entity).remove::<Transition>();
+        });
 }
 
 fn handle_sprite_direction(mut sprite: Query<(&ConfigDirection, &mut Sprite)>) {

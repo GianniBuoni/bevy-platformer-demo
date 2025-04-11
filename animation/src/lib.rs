@@ -4,6 +4,7 @@ mod config;
 mod config_direction;
 mod handling;
 pub mod prelude;
+mod state_machine;
 #[cfg(test)]
 mod tests;
 
